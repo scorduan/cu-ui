@@ -72,8 +72,11 @@
     <Content Include="images\skills\bar_skills_icon3.png" />
     <Content Include="images\skills\bar_skills_icon4.png" />
     <Content Include="images\target\target_plate.png" />
+    <Content Include="index.html" />
+    <Content Include="index\index.css" />
     <Content Include="kills\kills.css" />
     <Content Include="kills\kills.html" />
+    <TypeScriptCompile Include="index\index.ts" />
     <TypeScriptCompile Include="kills\kills.ts" />
     <Content Include="login\login.css" />
     <Content Include="login\login.html" />
@@ -88,6 +91,7 @@
     <Content Include="respawn\respawn.html" />
     <Content Include="skillbar\skillbar.css" />
     <Content Include="skillbar\skillbar.html" />
+    <TypeScriptCompile Include="vendor\jqueryui.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="cu\cu.ts" />
