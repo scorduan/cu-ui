@@ -35,6 +35,7 @@
     <Content Include="images\chat\box_plate.png" />
     <Content Include="images\chat\CSE_icon_badge.png" />
     <Content Include="images\errormessages\alert-bg.png" />
+    <Content Include="images\index\index-bg.png" />
     <Content Include="images\login\bg.jpg" />
     <Content Include="images\login\btn-arthurian-sprite.png" />
     <Content Include="images\login\btn-create-sprite.png" />
