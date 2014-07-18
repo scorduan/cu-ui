@@ -169,6 +169,11 @@ module Chat {
                 body = EverythingAfterArg(input, processed, 0);
                 cu.SendChat(XmppMessageType.CHAT, to, body);
                 return true;
+            case '/openui':
+                if (processed.args.length < 1) return false;
+                name = processed.args[0];
+                cuAPI.OpenUI(name + ".ui");
+                return true;
             default:
                 return false;
         }
