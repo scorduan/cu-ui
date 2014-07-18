@@ -1,0 +1,27 @@
+﻿body {
+    margin:0;
+    background-color:#000;
+}
+.res-1440x900 {
+    position:relative;
+    background-image: url("../images/index/index-bg.png");
+    height:900px;
+    width:1440px;
+}
+.hide {
+    display:none;
+}
+.ui-frame {
+    position:absolute;
+    background: rgba(255,255,255,.1)
+}
+iframe {
+    border:none;
+}
+.ui-icon-arrow-4 {
+    background-color:yellow;
+    position:absolute;
+    right:0;
+    z-index:1;
+    cursor:move;
+}

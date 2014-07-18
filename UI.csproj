@@ -27,6 +27,7 @@
     <Content Include="errormessages\errormessages.html" />
     <Content Include="gamemenu\gamemenu.css" />
     <Content Include="gamemenu\gamemenu.html" />
+    <Content Include="getUIFiles.aspx" />
     <Content Include="images\bar_skills_exp.png" />
     <Content Include="images\box_inventory_plate.png" />
     <Content Include="images\character\bar_health.png" />
@@ -35,6 +36,7 @@
     <Content Include="images\chat\box_plate.png" />
     <Content Include="images\chat\CSE_icon_badge.png" />
     <Content Include="images\errormessages\alert-bg.png" />
+    <Content Include="images\index\index-bg.png" />
     <Content Include="images\login\bg.jpg" />
     <Content Include="images\login\btn-arthurian-sprite.png" />
     <Content Include="images\login\btn-create-sprite.png" />
@@ -72,8 +74,11 @@
     <Content Include="images\skills\bar_skills_icon3.png" />
     <Content Include="images\skills\bar_skills_icon4.png" />
     <Content Include="images\target\target_plate.png" />
+    <Content Include="index.html" />
+    <Content Include="index\index.css" />
     <Content Include="kills\kills.css" />
     <Content Include="kills\kills.html" />
+    <TypeScriptCompile Include="index\index.ts" />
     <TypeScriptCompile Include="kills\kills.ts" />
     <Content Include="login\login.css" />
     <Content Include="login\login.html" />
@@ -88,6 +93,7 @@
     <Content Include="respawn\respawn.html" />
     <Content Include="skillbar\skillbar.css" />
     <Content Include="skillbar\skillbar.html" />
+    <TypeScriptCompile Include="vendor\jqueryui.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="cu\cu.ts" />
@@ -125,9 +131,26 @@
     <Content Include="vendor\strophe.js" />
     <Content Include="vendor\underscore.d.ts" />
     <Content Include="vendor\underscore.js" />
-    <Content Include="web.config" />
+    <Content Include="web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="getUIFiles.aspx.cs">
+      <DependentUpon>getUIFiles.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="getUIFiles.aspx.designer.cs">
+      <DependentUpon>getUIFiles.aspx</DependentUpon>
+    </Compile>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
