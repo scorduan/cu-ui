@@ -18,10 +18,25 @@
 iframe {
     border:none;
 }
+.ui-draggable-dragging {
+    border: 1px solid yellow;
+}
 .ui-icon-arrow-4 {
     background-color:yellow;
     position:absolute;
     right:0;
     z-index:1;
     cursor:move;
+}
+#save {
+    position:absolute;
+    right:20px;
+    top:20px;
+}
+
+#reload {
+    position:absolute;
+    right:20px;
+    top:80px;
+
 }

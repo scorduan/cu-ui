@@ -7,9 +7,69 @@ var cu = new CU();
 class UILoader {
     private $clientWindow: JQuery = $("#clientWindow");
     private $uiList: JQuery = $("#ui-list");
-
+    private $saveBtn: JQuery = $('#save');
+    private $reloadBtn: JQuery = $('#reload');
     constructor() {
-        
+        this.$saveBtn.button({ 'primary': 'ui-icon-disk' }).on('click', () => {
+            var $uiList: JQuery = $(".ui-frame");
+            var requests: Array<any> = [];
+            var messages: Array<string> = [];
+            $uiList.each((index, element) => {
+                
+                var name: string = $(element).attr('data-name');
+                var filename: string = name + ".ui";
+                var position: any = $(element).position();
+                var top: number = position.top;
+                var left: number = position.left;
+                var bottom: number = top + $(element).height();
+                var right: number = left + $(element).width();
+                var uiFileContentParam: string = jQuery.param({
+                    'name': name,
+                    'filename': filename,
+                    'top': top,
+                    'left': left,
+                    'bottom': bottom,
+                    'right': right
+                    
+                });
+                var request = $.ajax({
+                    url: '/saveUIFile.aspx',
+                    data: uiFileContentParam
+                });
+                requests.push(request);
+                request.done((json) => {
+                    if (json) {
+                        switch (json.code) {
+                            case 0:
+                            case 1:
+                                messages.push(json.success);
+                                break;
+                            case 53:
+                                messages.push(json.error);
+                                break;
+                            default:
+                                messages.push("Unknown Errorcode on "+filename);
+                                break;
+                        }
+                    }
+                    else {
+                        messages.push("Something bad happend with " + filename)
+                    }
+                });
+                
+            });
+            $.when.apply($, requests).then(function (schemas) {
+                console.log("DONE", messages);
+                alert(messages.join("\n"));
+                
+            }, function (e) {
+                alert("Something went wrong! Check your console");
+            });
+        });
+        this.$reloadBtn.button({ 'primary': 'ui-icon-disk' }).on('click', () => {
+            this.$clientWindow.empty();
+            this.parseUIList(this.$uiList);
+        });
         if (this.$uiList.children().length === 0) {
             console.log("Loading UI Elements from file system");
             this.$uiList.load('/getUIFiles.aspx #ui-list li', () => {
@@ -31,7 +91,7 @@ class UILoader {
             
             var json: any = $.getJSON('/' + uiFilename)
             json.done((json) => {
-                console.log('Loading "' + uiFilename + '"...');
+                console.log('Loading "' + uiFilename + '"...', json);
                 
                 this.LoadUI(json);
             })
@@ -53,12 +113,13 @@ class UILoader {
         var height: number = coords.bottom - coords.top;
         var width: number = coords.right - coords.left;
 
-        $('<div/>').addClass('ui-frame ui-' + name).css({
+        $('<div/>').addClass('ui-frame').css({
             top: top,
             left: left,
             height: height,
             width: width
         })
+        .attr("data-name",name)
         .append(
             $('<span class="ui-icon ui-icon-arrow-4"></span>')
         )
