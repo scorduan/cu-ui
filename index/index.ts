@@ -6,28 +6,45 @@ var cu = new CU();
 
 class UILoader {
     private $clientWindow: JQuery = $("#clientWindow");
-    private $uiList: JQuery = $("#ui-list").children();
+    private $uiList: JQuery = $("#ui-list");
 
     constructor() {
-        console.log("Loading UI Elements")
+        
+        if (this.$uiList.children().length === 0) {
+            console.log("Loading UI Elements from file system");
+            this.$uiList.load('/getUIFiles.aspx #ui-list li', () => {
+                this.parseUIList(this.$uiList);
+            });
+        }
+        else {
+            console.log("Loading UI Elements from index.html");
+            this.parseUIList(this.$uiList);
+        }
 
-        this.$uiList.each((index, element) => {
-            var uiFilename: string = $(element).text();
-            console.log('Loading "' + uiFilename + '"...');
-            var json: any = $.getJSON('/' + uiFilename)
-            json
-                .done((json) => {
-                    console.log(json);
-                    this.LoadUI(json);
-                 })
-                .fail((jqXHR, textStatus, errorThrown) => {
-                    console.error(errorThrown);
-                })
-        });
+
+
     }
 
-
+    private parseUIList(uiList: JQuery): void {
+        uiList.children().each((index, element) => {
+            var uiFilename: string = $(element).text();
+            
+            var json: any = $.getJSON('/' + uiFilename)
+            json.done((json) => {
+                console.log('Loading "' + uiFilename + '"...');
+                
+                this.LoadUI(json);
+            })
+            .fail((jqXHR, textStatus, errorThrown) => {
+                console.error(errorThrown);
+            })
+        });
+    }
     private LoadUI(m: UIModel): void {
+        if (m.onload === false) {
+            console.log('Skipping "' + m.name + '" because of "onload" is set to false');
+            return;
+        }
         var name: string = m.name;
         var coords: UIModelCoords = m.rect;
         var htmlFile: string = m.mainFile;
@@ -40,8 +57,7 @@ class UILoader {
             top: top,
             left: left,
             height: height,
-            width: width,
-            backgroundColor: "rgba(255,255,255,.5)"
+            width: width
         })
         .append(
             $('<span class="ui-icon ui-icon-arrow-4"></span>')
@@ -70,6 +86,7 @@ interface UIModel {
     mainFile: string;
     name: string;
     rect: UIModelCoords;
+    onload?: boolean;
 }
 interface UIModelCoords {
     top: number;
