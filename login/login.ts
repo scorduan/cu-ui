@@ -211,6 +211,8 @@ module Login {
     function showServerSelection() {
         selectedServer = null;
 
+        updateBackground(''); //cause the default bg to load;
+
         $characterSelection.fadeOut(() => {
             if (!$serversModalContainer) {
                 $serversModalContainer = createServersModal();
@@ -445,7 +447,7 @@ module Login {
                 raceCssClass = getRaceCssClass('Tuatha');
             }
 
-            var $character = $('<li class="character" data-character-id="' + character.id + '" data-character-name="' + _.escape(character.name) + '"></li>').appendTo($characters);
+            var $character = $('<li class="character" data-character-id="' + character.id + '" data-character-name="' + _.escape(character.name) + '" data-character-realm="' + character.race.faction.name + '"></li>').appendTo($characters);
 
             var $portrait = $('<div class="' + raceCssClass + '"></div>').css('background', getRaceBackgroundStyle(raceCssClass)).appendTo($character);
 
@@ -461,7 +463,13 @@ module Login {
             $nextButton.fadeIn();
         }
 
+        UpdateBgForCharacter();
         $characterSelection.fadeIn();
+    }
+
+    function UpdateBgForCharacter()
+    {
+        updateBackground($selectedCharacter.data('character-realm'));
     }
 
     function findRaceCssClass(raceValue) {
@@ -481,11 +489,13 @@ module Login {
     }
 
     function selectCharacter($nextSelectedCharacter) {
+        
         if (!$nextSelectedCharacter.length) {
             $selectedCharacter.fadeIn();
         } else {
             $selectedCharacter.fadeOut(() => {
                 $selectedCharacter = $nextSelectedCharacter.fadeIn();
+                UpdateBgForCharacter();
             });
         }
     }
@@ -595,10 +605,27 @@ module Login {
         }).fail(getRaces);
     }
 
+    function updateBackground(selectedRealm)
+    {
+        var bgName = 'bg.jpg';
+
+        if ('TDD' == selectedRealm)
+            bgName = 'tddbkg.jpg';
+        else if ('Viking' == selectedRealm)
+            bgName = 'vikingbkg.jpg';
+        else if ('Arthurian' == selectedRealm)
+            bgName = 'arthurianbkg.jpg';
+
+        $('html').css('background-image', 'url(../images/login/' + bgName + ')');
+        $('#CommunityBannerBlur').css('background-image', 'url(../images/login/' + bgName + ')');
+    }
+
     function selectRealm(realm, isForced) {
         if (selectedRealm === realm && !isForced) return;
 
         selectedRealm = realm;
+
+        updateBackground(selectedRealm);
 
         selectedRace = null;
 
