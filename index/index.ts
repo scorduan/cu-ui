@@ -159,7 +159,7 @@ class UILoader {
             $('<span class="ui-icon ui-icon-arrow-4" title="Move UI"></span>')
             )
             .append(
-            $('<span class="ui-icon' + (core ? "" : (autoload ? " ui-icon-minus" : " ui-icon-plus")) + '" title="Autoload UI"></span>')
+            $('<span class="ui-icon' + (core ? "hide" : (autoload ? " ui-icon-minus" : " ui-icon-plus")) + '" title="Autoload UI"></span>')
                 .on("click", (event) => {
                     $(event.target).toggleClass("ui-icon-minus ui-icon-plus");
                 })
