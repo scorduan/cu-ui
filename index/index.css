@@ -8,7 +8,7 @@
     height:900px;
     width:1440px;
 }
-.hide {
+.hide,.ui-icon.hide {
     display:none;
 }
 .ui-frame {
@@ -21,6 +21,9 @@ iframe {
 .ui-draggable-dragging {
     border: 1px solid yellow;
 }
+.ui-frame .ui-icon {
+    top:-17px;
+}
 .ui-icon-arrow-4 {
     background-color:yellow;
     position:absolute;
@@ -28,15 +31,35 @@ iframe {
     z-index:1;
     cursor:move;
 }
+.ui-icon-minus {
+    background-color:red;
+    position:absolute;
+    right:16px;
+    z-index:1;
+    cursor:pointer;
+}
+.ui-icon-plus {
+    background-color:green;
+    position:absolute;
+    right:16px;
+    z-index:1;
+    cursor:pointer;
+}
 #save {
     position:absolute;
-    right:20px;
+    right:10px;
     top:20px;
 }
 
 #reload {
     position:absolute;
-    right:20px;
+    right:10px;
     top:80px;
+
+}
+#saveModuleList {
+    position:absolute;
+    right:10px;
+    top:200px;
 
 }

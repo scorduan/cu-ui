@@ -4,8 +4,8 @@
 	"mainFile" : "gamemenu/gamemenu.html",
 		"rect" : {
 		"left" : 487,
-		"top" : 333,
+		"top" : 260,
 		"right" : 953,
-		"bottom" : 408
+		"bottom" : 335
 	}
 }
