@@ -3,9 +3,9 @@
 	"name" : "kills",
 	"mainFile" : "kills/kills.html",
 	"rect" : {
-		"left" : 500,
-		"top" : 300,
-		"right" : 900,
-		"bottom" : 600
+		"left" : 1016,
+		"top" : 281,
+		"right" : 1416,
+		"bottom" : 581
 	}
 }

@@ -3,10 +3,10 @@
 	"name" : "chat",
 	"mainFile" : "chat/chat.html",
 	"rect" : {
-		"left" : 2,
-		"top" : 500,
-		"right" : 640,
-		"bottom" : 770
+		"left" : 0,
+		"top" : 528,
+		"right" : 638,
+		"bottom" : 798
 	},
 	"handlesChat" : true
 }

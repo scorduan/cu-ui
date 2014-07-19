@@ -3,9 +3,9 @@
 	"name" : "character",
 	"mainFile" : "character/character.html",
 	"rect" : {
-		"left" : 5,
-		"top" : 25,
-		"right" : 385,
-		"bottom" : 200
+		"left" : 13,
+		"top" : 28,
+		"right" : 393,
+		"bottom" : 203
 	}
 }

@@ -91,6 +91,8 @@
     <TypeScriptCompile Include="perfhud\perfhud.ts" />
     <Content Include="respawn\respawn.css" />
     <Content Include="respawn\respawn.html" />
+    <Content Include="saveModuleList.aspx" />
+    <Content Include="saveUIFile.aspx" />
     <Content Include="skillbar\skillbar.css" />
     <Content Include="skillbar\skillbar.html" />
     <TypeScriptCompile Include="vendor\jqueryui.d.ts" />
@@ -149,6 +151,20 @@
     </Compile>
     <Compile Include="getUIFiles.aspx.designer.cs">
       <DependentUpon>getUIFiles.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="saveModuleList.aspx.cs">
+      <DependentUpon>saveModuleList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="saveModuleList.aspx.designer.cs">
+      <DependentUpon>saveModuleList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="saveUIFile.aspx.cs">
+      <DependentUpon>saveUIFile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="saveUIFile.aspx.designer.cs">
+      <DependentUpon>saveUIFile.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <PropertyGroup>
