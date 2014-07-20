@@ -6,6 +6,7 @@ body {
     position: absolute;
     padding: 0;
     margin: 0;
+    overflow:hidden;
 }
 
 #chatBox {
@@ -21,7 +22,7 @@ body {
     top: 4px;
     width: 532px;
     height: 182px;
-    overflow-y: scroll;
+    overflow:hidden;
     word-wrap: break-word;
 }
 
@@ -29,6 +30,7 @@ body {
     color: white;
     font-family: Tahoma, Geneva, sans-serif;
     float: left;
+    font-size:14px;
     width: 100%;
 }
 
@@ -39,6 +41,10 @@ body {
 .chatBody.imChat {
     color: greenyellow;
 }
+.chatBody.imOutChat {
+    color: yellowgreen;
+}
+
 
 .chatBody.combatChat {
     font-weight: bold;
@@ -81,4 +87,6 @@ body {
 .consoleBody.output {
     color: white;
     font-weight: bold;
+    font-family:'Courier New';
+    font-size: 14px;
 }
