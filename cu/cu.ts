@@ -926,7 +926,10 @@ class CU {
             if (this.HasRoomPresence(room)) {
                 this.SendWebSocketMessageFromCurrentUser(messageType, room, input);
             } else {
-                this.JoinRoomAsCurrentUser(room);
+                this.JoinRoomAsCurrentUser(room, () => {
+                    this.SendWebSocketMessageFromCurrentUser(messageType, room, input);
+                });
+                
             }
         }
     }
@@ -959,8 +962,9 @@ class CU {
         this.SendWebSocketMessage($msg({ to: room, from: room + '/' + this.currentJid.user, type: XmppMessageType[messageType].toLowerCase(), id: this.GetNextId() }).c('body').t(input));
     }
 
-    public JoinRoomAsCurrentUser(room: string) {
+    public JoinRoomAsCurrentUser(room: string,callback?: Function) {
         this.SendWebSocketMessage($pres({ to: room + '/' + this.currentJid.user }).c('x', { xmlns: 'http://jabber.org/protocol/muc' }));
+        if (_.isFunction(callback)) callback();
     }
 
     private GetFirstElement(elements) {

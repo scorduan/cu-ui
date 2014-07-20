@@ -4,15 +4,15 @@
 
 var cu = new CU();
 var UI = UI || {};
-class UILoader {
-    private $clientWindow: JQuery = $("#clientWindow");
-    private $uiList: JQuery = $("#ui-list");
-    private $saveBtn: JQuery = $('#save');
-    private $reloadBtn: JQuery = $('#reload');
-    private $saveModuleList: JQuery = $('#saveModuleList');
+module UILoader {
+    var $clientWindow: JQuery = $("#clientWindow");
+    var $uiList: JQuery = $("#ui-list");
+    var $saveBtn: JQuery = $('#save');
+    var $reloadBtn: JQuery = $('#reload');
+    var $saveModuleList: JQuery = $('#saveModuleList');
 
-    constructor() {
-        this.$saveBtn.button({ 'icons': { 'primary': 'ui-icon-disk' } }).on('click', () => {
+    cu.OnInitialized(() => {
+        $saveBtn.button({ 'icons': { 'primary': 'ui-icon-disk' } }).on('click', () => {
             var $uiList: JQuery = $(".ui-frame");
             var requests: Array<any> = [];
             var messages: Array<string> = [];
@@ -68,7 +68,7 @@ class UILoader {
                 alert("Something went wrong! Check your console");
             });
         });
-        this.$saveModuleList.button({ 'icons': { 'primary': 'ui-icon-arrowrefresh-1-n' } }).on('click', () => {
+        $saveModuleList.button({ 'icons': { 'primary': 'ui-icon-arrowrefresh-1-n' } }).on('click', () => {
             var $uiList: JQuery = $(".ui-frame");
             var uiFileContentParams: Array<String> = [];
 
@@ -97,41 +97,40 @@ class UILoader {
                     console.error(errorThrown);
                 })            
         });
-        this.$reloadBtn.button({ 'icons': { 'primary': 'ui-icon-disk' } }).on('click', () => {
-            this.$clientWindow.empty();
-            this.parseUIList(this.$uiList);
+        $reloadBtn.button({ 'icons': { 'primary': 'ui-icon-disk' } }).on('click', () => {
+            $clientWindow.empty();
+            parseUIList($uiList);
         });
-        if (this.$uiList.children().length === 0) {
+        if ($uiList.children().length === 0) {
             console.log("Loading UI Elements from file system");
-            this.$uiList.load('/getUIFiles.aspx #ui-list li', () => {
-                this.parseUIList(this.$uiList);
+            $uiList.load('/getUIFiles.aspx #ui-list li', () => {
+                parseUIList($uiList);
             });
         }
         else {
             console.log("Loading UI Elements from index.html");
-            this.parseUIList(this.$uiList);
+            parseUIList($uiList);
         }
 
 
 
-    }
+    })
 
-    private parseUIList(uiList: JQuery): void {
+    function parseUIList(uiList: JQuery): void {
         uiList.children().each((index, element) => {
             var uiFilename: string = $(element).text();
             
             var json: any = $.getJSON('/' + uiFilename)
             json.done((json) => {
                 console.log('Loading "' + uiFilename + '"...', json);
-                
-                this.LoadUI(json);
+                LoadUI(json);
             })
             .fail((jqXHR, textStatus, errorThrown) => {
                 console.error(errorThrown);
             })
         });
     }
-    private LoadUI(m: UIModel): void {
+    function LoadUI(m: UIModel): void {
         if (m.onload === false) {
             console.log('Skipping "' + m.name + '" because of "onload" is set to false');
             return;
@@ -145,40 +144,44 @@ class UILoader {
         var width: number = coords.right - coords.left;
         var autoload: boolean = UI.Modules && UI.Modules[name] && UI.Modules[name].autoload;
         var core: boolean = UI.Modules && UI.Modules[name] && UI.Modules[name].core;
-        
+        var $iframe: JQuery = $('<iframe />')
+            .attr("width", width)
+            .attr("height", height)
+            .attr("scrolling", "no")
+            .attr("src", htmlFile);
+
         $('<div/>')
-            .addClass('ui-frame').css({
+            .addClass('ui-frame ui-state-default').css({
                 top: top,
                 left: left,
                 height: height,
                 width: width
             })
             .attr("data-name", name)
-            .attr("data-autoload", autoload ? "true" : "false") // TODO: Load this from module-list.js ..whaait
+            .attr("data-autoload", autoload ? "true" : "false")
             .append(
             $('<span class="ui-icon ui-icon-arrow-4" title="Move UI"></span>')
             )
             .append(
-            $('<span class="ui-icon' + (core ? "hide" : (autoload ? " ui-icon-minus" : " ui-icon-plus")) + '" title="Autoload UI"></span>')
+                $('<div class="ui-frame-name" />').text(name)
+            )
+            .append(
+            $('<span class="ui-icon' + (core ? " hide" : (autoload ? " ui-icon-minus" : " ui-icon-plus")) + '" title="Autoload UI"></span>')
                 .on("click", (event) => {
                     $(event.target).toggleClass("ui-icon-minus ui-icon-plus");
                 })
             )
             .append(
-                $('<iframe />')
-                    .attr("width", width)
-                    .attr("height", height)
-                    .attr("scrolling", "false")
-                    .attr("src", htmlFile)
+                $iframe
             )
-            .appendTo(this.$clientWindow)
+            .appendTo($clientWindow)
             .draggable({
                 'containment': 'parent',
                 'iframeFix': true,
                 handle: ".ui-icon-arrow-4"
 
             })
-        
+            .resizable({ autoHide: true, alsoResize: $iframe });
     }
 
 }
@@ -198,4 +201,3 @@ interface UIModelCoords {
     left: number;
     right: number;
 }
-var loader = new UILoader();

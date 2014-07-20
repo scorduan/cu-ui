@@ -30,11 +30,27 @@ module Chat {
 
         if (!hasScrolled) {
             $chatText.scrollTop($chatText[0].scrollHeight);
+            $chatText.perfectScrollbar('update');
         }
     }
 
     function SetTextEntryMode(mode) {
         $chatInput.attr('data-command-mode', mode.toString());
+    }
+    function OnChatCommand(command: string, args: Array<string>) {
+        var msg;
+        var msgClass = 'chatBody';
+        switch (command) {
+            case "/whisper":
+                msg = '[IM to] [' + args[0] + ']: ' + args[1];
+                msgClass = msgClass + ' imOutChat';                
+                break;
+            default:
+                break;
+        }
+
+        var chatBody = $('<div/>').text(msg).addClass(msgClass);
+        AppendChat(chatBody, null);
     }
 
     function OnChat(type, from, body, nick, iscse) {
@@ -48,10 +64,9 @@ module Chat {
                 jid = new JID(from);
                 displayName = jid.user;
                 if (nick) displayName = nick;
-                msg = '[IM] [' + displayName + ']: ' + body;
+                msg = '[IM from] [' + displayName + ']: ' + body;
                 msgClass = msgClass + ' imChat';
-
-                break;
+            break;
             case XmppMessageType.GROUPCHAT:
                 jid = new JID(from);
                 switch (jid.user) {
@@ -146,15 +161,24 @@ module Chat {
         var body;
         switch (processed.name) {
             case '/join':
-                if (processed.args.length < 1) return false;
+                if (processed.args.length < 1) {
+                    OnConsoleText("Usage: " + processed.name + " <chatroom>");
+                    return false;
+                }
                 cu.JoinMUC(processed.args[0]);
                 return true;
             case '/leave':
-                if (processed.args.length < 1) return false;
+                if (processed.args.length < 1) {
+                    OnConsoleText("Usage: " + processed.name + " <chatroom>");
+                    return false;
+                }
                 cu.LeaveMUC(processed.args[0]);
                 return true;
             case '/muc':
-                if (processed.args.length < 2) return false;
+                if (processed.args.length < 2) {
+                    OnConsoleText("Usage: " + processed.name + " <chatroom> <message>");
+                    return false;
+                }
                 to = processed.args[0] + '@' + cu.CHAT_SERVICE;
                 body = EverythingAfterArg(input, processed, 0);
                 cu.SendChat(XmppMessageType.GROUPCHAT, to, body);
@@ -164,17 +188,54 @@ module Chat {
                 return true;
             case '/tell':
             case '/whisper':
-                if (processed.args.length < 2) return false;
+                if (processed.args.length < 2) {
+                    OnConsoleText("Usage: " + processed.name + " <to> <message>");
+                    return false;
+                }
+
                 to = processed.args[0];
+                if (to.match('@' + cu.CHAT_DOMAIN)){
+                    to += '@' + cu.CHAT_DOMAIN;
+                }
                 body = EverythingAfterArg(input, processed, 0);
                 cu.SendChat(XmppMessageType.CHAT, to, body);
+                OnChatCommand(processed.name, [processed.args[0], body]);
                 return true;
             case '/openui':
-                if (processed.args.length < 1) return false;
-                name = processed.args[0];
+                if (processed.args.length < 1) {
+                    OnConsoleText("Usage: " + processed.name + " <name>\r\nHint: The addon name without '.ui' extension. e.g. /openui addon");
+                    return false;
+                }
+                var name:string = processed.args[0];
                 cuAPI.OpenUI(name + ".ui");
                 return true;
+            case '/connect':
+                if (cu.HasAPI()) return false;
+                var loginToken: string = processed.args[0];
+                if (processed.args.length == 0) {
+                    if ($.cookie("myLoginToken")) {
+                        loginToken = $.cookie("myLoginToken");
+                    }
+                    else {
+                        OnConsoleText("Usage: " + processed.name + " <yourloginToken>");
+                        return false;
+                    }
+
+                } else {
+                    loginToken = processed.args[0];
+                    $.cookie("myLoginToken", loginToken)
+                }
+                Chat.Connect(loginToken);
+                return true;
+            case '/disconnect':
+                if (cu.HasAPI()) return false;
+                if (processed.args.length < 1) return false;
+                var loginToken: string = processed.args[0];
+                console.log("Disconnecting from chat");
+                Chat.Disconnect();
+                return true;
             default:
+                OnConsoleText("Unknown command. Use /help for a list of commands");
                 return false;
         }
     }
@@ -228,6 +289,7 @@ module Chat {
 
         $chatText = cu.FindElement('#chatText');
 
+        $chatText.perfectScrollbar({suppressScrollX:false});
         $chatText.scroll(OnChatTextScroll);
 
         cu.Listen('OnChat', OnChat);
@@ -237,6 +299,10 @@ module Chat {
         $chatInput.keydown(OnSubmitChat);
         $chatInput.focus(OnFocus);
         $chatInput.blur(OnBlur);
+        if ($.cookie("myLoginToken")) {
+            OnConsoleText("Reconnecting to chat!");
+            Connect($.cookie("myLoginToken"));
+        }
     });
 
     cu.OnServerConnected(() => {
