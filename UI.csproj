@@ -22,6 +22,7 @@
     <TypeScriptCompile Include="character\character.ts" />
     <Content Include="chat\chat.css" />
     <Content Include="chat\chat.html" />
+    <Content Include="common\sexyscroll.css" />
     <Content Include="cu\cu.css" />
     <Content Include="errormessages\errormessages.css" />
     <Content Include="errormessages\errormessages.html" />
